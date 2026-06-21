@@ -3,22 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>성장판 · 스타런 2기 투표 프로토타입 (협의용)</title>
+<title>성장판 · 스타런 2기 투표 프로토타입 (화면설계서 싱크)</title>
 <style>
   :root{
     --green:#34a35b; --green-dk:#2b8a4c;
     --cream:#f5ece0; --cream-2:#faf4ea;
     --ink:#2a2f36; --ink-2:#8a8f98; --line:#ece3d6;
-    --blue:#3d7fd6; --blue-chip:#e7f0fb; --blue-bn:#dce9f7;
-    --set-done:#eef1f4;
-    --warn:#d98324; --stop:#c84b4b;
+    --blue:#3d7fd6; --blue-bn:#dce9f7; --sky:#dce8f6;
+    --warn:#d98324; --stop:#c84b4b; --ph:#e0d9cd;
     --shadow:0 10px 30px rgba(70,90,60,.14);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
     background:#eceff3;color:var(--ink);min-height:100vh;display:flex;flex-direction:column;
     align-items:center;padding:28px 16px 56px;-webkit-font-smoothing:antialiased}
-
   .doc-head{width:100%;max-width:920px;margin-bottom:20px}
   .doc-tag{display:inline-block;font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--green-dk);
     background:#e3f3ea;border:1px solid #c4e6d1;padding:5px 11px;border-radius:999px;margin-bottom:10px}
@@ -39,135 +37,102 @@
     border:9px solid #20262e;position:relative;overflow:hidden}
   .screen{position:absolute;inset:0;display:none}
   .screen.show{display:block}
-
-  /* 앱 셸: 좌측 사이드바 + 콘텐츠 */
   .app{position:absolute;inset:0;display:flex}
   .side{width:62px;flex:0 0 62px;background:linear-gradient(180deg,#43a85f,#2f9650);
     display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:8px;z-index:5}
   .side .ham{color:#fff;font-size:22px;cursor:pointer;width:40px;height:40px;border-radius:12px;
     display:flex;align-items:center;justify-content:center;margin-bottom:18px}
-  .side .ham:hover{background:rgba(255,255,255,.16)}
   .side .nav{color:#dff0e6;font-size:18px;width:42px;height:42px;border-radius:13px;
     display:flex;align-items:center;justify-content:center;cursor:default}
   .side .nav.on{background:#fff;color:var(--green)}
   .content{flex:1;overflow-y:auto;background:var(--cream)}
-
   .topbar{display:flex;align-items:center;padding:18px 18px 6px}
   .topbar .mc{font-size:19px;font-weight:800}
-  .topbar .who{margin-left:auto;font-size:12.5px;color:var(--ink-2);max-width:150px;
-    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .topbar .out{margin-left:12px;font-size:16px;color:var(--ink);cursor:pointer}
-
+  .topbar .who{margin-left:auto;font-size:12.5px;color:var(--ink-2);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .hero{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 18px 8px}
   .hero h2{font-size:22px;font-weight:800;line-height:1.3;letter-spacing:-.02em}
   .hero h2 small{display:block;font-size:15px;font-weight:600;color:var(--ink-2);margin-top:4px}
-  .sprout{position:relative;width:108px;height:78px;flex:0 0 auto}
-  .sprout .b{position:absolute;bottom:0;border-radius:50%;display:flex;align-items:center;justify-content:center}
-  .sprout .b1{width:54px;height:54px;left:6px;background:#8fd6a0}
-  .sprout .b2{width:46px;height:46px;left:52px;background:#3aa55c}
-  .sprout .leaf{position:absolute;width:11px;height:16px;background:#3aa55c;border-radius:0 60% 0 60%;top:-2px}
-  .sprout .spk{position:absolute;color:#f5c543;font-size:13px}
-  .face{color:#1f3a28;font-size:14px;font-weight:700}
+  .sprout{position:relative;width:96px;height:70px;flex:0 0 auto}
+  .sprout .b{position:absolute;bottom:0;border-radius:50%}
+  .sprout .b1{width:48px;height:48px;left:4px;background:#8fd6a0}
+  .sprout .b2{width:40px;height:40px;left:46px;background:#3aa55c}
 
-  .card{background:#fff;border-radius:18px;margin:10px 16px;box-shadow:0 4px 14px rgba(70,90,60,.07);padding:18px}
-  .card .ct{display:flex;align-items:center;gap:8px}
-  .card .ct h3{font-size:17px;font-weight:800}
-  .chip-xp{font-size:11px;font-weight:700;color:var(--blue);background:var(--blue-chip);border-radius:999px;padding:2px 8px}
-  .card .find{margin-left:auto;font-size:12px;color:var(--ink-2)}
-  .enc{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);margin-top:12px}
-  .enc .e{font-size:15px}
-  .sets{display:flex;gap:8px;margin-top:14px}
-  .set{flex:1;border-radius:999px;padding:10px 6px;text-align:center;font-size:12.5px;font-weight:700;
-    border:1.5px solid var(--line);background:var(--set-done);color:var(--ink-2);display:flex;
-    align-items:center;justify-content:center;gap:5px}
-  .set.now{background:#fff;border-color:var(--green);color:var(--ink)}
-  .set.go{background:#fff;border-color:var(--green);color:var(--ink)}
-  .set .mini{font-size:9.5px;font-weight:700;color:#fff;background:var(--green);border-radius:999px;padding:2px 6px}
-  .set .arr{color:#fff;background:var(--green);width:16px;height:16px;border-radius:50%;font-size:10px;
-    display:flex;align-items:center;justify-content:center}
-  .set .ok{color:var(--green)}
-
-  .banner{background:var(--blue-bn);border-radius:18px;margin:12px 16px;padding:18px;position:relative}
-  .banner h4{font-size:15px;font-weight:800;line-height:1.4;max-width:210px}
-  .banner p{font-size:11.5px;color:var(--ink-2);margin-top:8px}
-  .banner .x{position:absolute;top:14px;right:14px;color:var(--ink-2);font-size:15px;cursor:pointer}
-  .banner .tab{position:absolute;right:16px;bottom:16px;width:74px;height:50px;border-radius:8px;
-    background:linear-gradient(135deg,#cdd7e6,#b7c3d6);display:flex;align-items:center;justify-content:center;
-    font-size:9px;color:#6b7787;font-weight:700}
+  .vbanner{background:linear-gradient(135deg,#3aa55c,#2f9650);color:#fff;border-radius:18px;margin:12px 16px;
+    padding:18px;position:relative;cursor:pointer;overflow:hidden}
+  .vbanner .tag{font-size:10.5px;font-weight:700;opacity:.92}
+  .vbanner h4{font-size:16px;font-weight:800;margin-top:5px;max-width:220px;line-height:1.35}
+  .vbanner p{font-size:11.5px;opacity:.92;margin-top:7px}
+  .vbanner .go{display:inline-flex;align-items:center;gap:4px;margin-top:13px;background:#fff;color:var(--green-dk);
+    font-size:12px;font-weight:700;border-radius:999px;padding:7px 14px}
+  .vbanner .mic{position:absolute;right:16px;bottom:14px;font-size:38px;opacity:.32}
+  .closed-note{margin:12px 16px;padding:16px;border:1.5px dashed var(--stop);border-radius:14px;
+    background:#fcf0f0;color:#a23b3b;font-size:12px;font-weight:600;line-height:1.5;display:none}
+  .closed-note.show{display:block}
 
   .lcard{background:#fff;border-radius:18px;margin:10px 16px;box-shadow:0 4px 14px rgba(70,90,60,.07);padding:18px}
   .lcard h3{font-size:17px;font-weight:800}
-  .lmeta{display:flex;gap:20px;margin-top:14px;font-size:12px}
-  .lmeta b{font-weight:700;margin-right:6px}
-  .lmeta span{color:var(--ink-2)}
-  .lbtn{margin-top:14px;width:100%;border:1.5px solid var(--green);background:#fff;color:var(--ink);
-    font-family:inherit;font-size:14px;font-weight:700;border-radius:999px;padding:12px;cursor:pointer;
-    display:flex;align-items:center;justify-content:center;gap:8px}
-  .lbtn .arr{color:#fff;background:var(--green);width:18px;height:18px;border-radius:50%;font-size:11px;
-    display:flex;align-items:center;justify-content:center}
+  .lcard .ln{height:12px;background:var(--line);border-radius:6px;margin-top:12px}
 
-  /* 슬라이드 드로어 */
   .drawer{position:absolute;inset:0;z-index:40;display:none}
   .drawer.show{display:block}
   .drawer .dim{position:absolute;inset:0;background:rgba(20,30,20,.42)}
-  .drawer .panel{position:absolute;top:0;left:0;bottom:0;width:300px;background:#fff;
-    transform:translateX(-100%);transition:transform .26s ease;display:flex;flex-direction:column}
+  .drawer .panel{position:absolute;top:0;left:0;bottom:0;width:300px;background:#fff;transform:translateX(-100%);transition:transform .26s ease;display:flex;flex-direction:column}
   .drawer.show .panel{transform:translateX(0)}
-  .dr-head{background:linear-gradient(135deg,#43a85f,#2f9650);color:#fff;padding:22px 20px 24px}
-  .dr-head .hi{font-size:12.5px;opacity:.92}
+  .dr-head{background:linear-gradient(135deg,#43a85f,#2f9650);color:#fff;padding:22px 20px 24px;position:relative}
   .dr-head .nm{font-size:18px;font-weight:800;margin-top:3px}
-  .dr-head .cls{margin-top:14px;background:rgba(255,255,255,.16);border-radius:12px;padding:11px 13px;
-    font-size:12.5px;display:flex;justify-content:space-between}
   .dr-close{position:absolute;top:18px;right:16px;color:#fff;font-size:18px;cursor:pointer}
-  .dr-menu{padding:8px 0;overflow-y:auto}
-  .dr-menu .row{display:flex;align-items:center;gap:13px;padding:15px 20px;font-size:14.5px;
-    border-bottom:1px solid #f1f4f1;color:var(--ink)}
-  .dr-menu .row .e{width:30px;height:30px;border-radius:9px;background:#eef6f0;display:flex;
-    align-items:center;justify-content:center;font-size:15px}
-  .dr-menu .row.event{cursor:pointer}
-  .dr-menu .row.event .e{background:#fdeede}
-  .dr-menu .row.event:hover{background:#f5fbf7}
-  .dr-menu .row .badge{margin-left:auto;font-size:10px;font-weight:700;color:#fff;background:var(--stop);
-    border-radius:999px;padding:3px 8px}
+  .dr-menu .row{display:flex;align-items:center;gap:13px;padding:15px 20px;font-size:14.5px;border-bottom:1px solid #f1f4f1;color:var(--ink)}
+  .dr-menu .row .e{width:30px;height:30px;border-radius:9px;background:#eef6f0;display:flex;align-items:center;justify-content:center;font-size:15px}
   .dr-menu .row .arr{margin-left:auto;color:#cdd5cd;font-size:16px}
-  .dr-menu .row.event .arr{margin-left:8px}
 
-  /* 투표/결과 화면 */
-  .vscreen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--cream-2)}
+  .modal{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:22px}
+  .modal.show{display:flex}
+  .modal .dim{position:absolute;inset:0;background:rgba(20,30,20,.5)}
+  .pop{position:relative;width:100%;max-width:320px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+  .pop-x{position:absolute;top:11px;right:13px;color:#fff;font-size:15px;cursor:pointer;z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}
+  /* 포스터형 메인 팝업 */
+  .pop.poster{max-width:330px;cursor:pointer}
+  .pop .vis{height:280px;background:linear-gradient(135deg,#dce8f6,#cfe0f5);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#2c63ab}
+  .pop .vis .k{font-size:11px;font-weight:700;letter-spacing:.05em}
+  .pop .vis .t{font-size:21px;font-weight:800;margin-top:6px;color:var(--ink)}
+  .pop .vis .ph-note{font-size:10.5px;color:#9aacc4;margin-top:14px}
+  .pop .lead{padding:20px 22px 10px;text-align:center}
+  .pop .lead .c1{font-size:15px;font-weight:800;color:var(--ink);line-height:1.5}
+  .pop .lead .c2{font-size:11.5px;color:var(--ink-2);margin-top:10px}
+  .pop .lead .tap{font-size:11px;color:var(--green-dk);font-weight:700;margin-top:14px;padding-bottom:6px}
+  /* 안내 팝업 */
+  .pop-body{padding:24px 22px 22px;text-align:center}
+  .pop-body .emo{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px}
+  .pop-body .emo.ok{background:#e2f5ea}.pop-body .emo.warn{background:#fdf0e0}
+  .pop-body h3{font-size:18px;font-weight:800}
+  .pop-body p{font-size:12.5px;color:var(--ink-2);line-height:1.6;margin-top:8px}
+  .pop-body .pick{margin-top:13px;font-size:12.5px;font-weight:700;color:var(--green-dk);background:#f1faf4;border:1px solid #c4e6d1;border-radius:10px;padding:8px 14px;display:inline-block}
+  .pop-btns{margin-top:18px}
+  .btn{width:100%;border:none;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--green);border-radius:13px;padding:13px;cursor:pointer}
+  .btn:hover{background:var(--green-dk)}
+
+  .vscreen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--cream-2);z-index:20}
   .vscreen.show{display:flex}
-  .appbar{height:54px;flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:0 14px;
-    background:#fff;border-bottom:1px solid var(--line)}
-  .appbar .ic{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-    cursor:pointer;font-size:20px;border-radius:8px;color:var(--ink)}
-  .appbar .ic:hover{background:#f3efe8}
+  .appbar{height:54px;flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:0 14px;background:#fff;border-bottom:1px solid var(--line)}
+  .appbar .ic{width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;color:var(--ink)}
   .appbar .title{font-size:15px;font-weight:700}
   .vbody{flex:1;overflow-y:auto}
-  .vhero{background:#dce8f6;padding:24px 20px 20px;text-align:center}
+  .vhero{background:var(--sky);padding:22px 20px 18px;text-align:center}
   .vhero .kij{font-size:11px;font-weight:700;color:#2c63ab;letter-spacing:.06em}
-  .vhero h2{font-size:21px;font-weight:800;line-height:1.32;margin-top:9px;letter-spacing:-.02em}
-  .vhero p{font-size:12.5px;color:var(--ink-2);margin-top:10px;line-height:1.55}
-  .vhero .single{display:inline-block;margin-top:11px;font-size:11px;font-weight:700;color:#2c63ab;
-    background:#fff;border:1px solid #cfe0f5;border-radius:999px;padding:4px 11px}
-  .cands{padding:16px 16px 10px;display:flex;flex-direction:column;gap:12px}
-  .cand{background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:.13s}
+  .vhero h2{font-size:20px;font-weight:800;line-height:1.3;margin-top:8px}
+  .vhero p{font-size:12px;color:var(--ink-2);margin-top:8px;line-height:1.5}
+  .vhero .single{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;color:#2c63ab;background:#fff;border:1px solid #cfe0f5;border-radius:999px;padding:4px 11px}
+  /* 2열 카드 그리드 */
+  .cands{padding:14px 16px 8px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cand{background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:.13s;display:flex;flex-direction:column}
   .cand:hover{border-color:#bfe0cb}
   .cand.sel{border-color:var(--green);box-shadow:0 2px 10px rgba(52,163,91,.16)}
-  .cand .photo{width:100%;height:158px;position:relative;background:#eef0f4;display:block}
-  .cand .photo img{width:100%;height:100%;object-fit:cover;display:block}
-  .cand .ph-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
-    justify-content:center;gap:5px;background:linear-gradient(135deg,#e3ddd2,#f1ece2);color:#8f8779;
-    font-size:13px;font-weight:700}
-  .cand .ph-fallback small{font-size:10px;font-weight:600;color:#b3aa9b}
-  .cand .info{display:flex;align-items:center;gap:10px;padding:12px 14px}
-  .cand .nm{font-size:15px;font-weight:700}
-  .cand .sub{font-size:11px;color:var(--ink-2);margin-top:2px}
-  .cand .rb{margin-left:auto;width:22px;height:22px;border-radius:50%;border:2px solid #cdd5c8;flex:0 0 auto;
-    display:flex;align-items:center;justify-content:center}
-  .cand.sel .rb{border-color:var(--green);background:var(--green)}
-  .cand.sel .rb::after{content:"";width:8px;height:8px;border-radius:50%;background:#fff}
+  .cand .nm{font-size:13.5px;font-weight:700;padding:9px 11px 1px}
+  .cand .sub{font-size:10px;color:var(--ink-2);padding:0 11px 7px}
+  .cand .photo{margin:0 11px 11px;height:84px;border-radius:9px;background:linear-gradient(135deg,#e3ddd2,#f1ece2);position:relative;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9a9285;font-weight:600}
+  .cand.sel .photo::after{content:"✓";position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
   .cand.etc .photo{display:none}
-  .cand.etc .info .ic-plus{width:46px;height:46px;border-radius:11px;background:#f1ece2;color:#9a9285;
-    display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700}
+  .cand.etc{padding-bottom:11px}
   .etc-input{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .22s ease}
   .etc-input.open{max-height:90px}
   .etc-input input{width:100%;margin-top:2px;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:13px;font-family:inherit}
@@ -175,32 +140,15 @@
   .etc-input .note{font-size:10.5px;color:#b3aa9b;margin-top:5px;padding-left:3px}
   .vfoot{padding:13px 16px 18px;background:var(--cream-2)}
   .vfoot .priv{font-size:10.5px;color:var(--ink-2);text-align:center;margin-bottom:11px;line-height:1.5}
-  .btn{width:100%;border:none;font-family:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--green);
-    border-radius:13px;padding:14px;cursor:pointer;transition:.13s}
-  .btn:hover{background:var(--green-dk)}
-  .btn:disabled{background:#cdd5c8;cursor:not-allowed}
-  .result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:34px 28px}
-  .result .emo{width:78px;height:78px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;margin-bottom:12px}
-  .result.ok .emo{background:#e2f5ea}
-  .result.warn .emo{background:#fdf0e0}
-  .result.stop .emo{background:#fbe8e8}
-  .result h3{font-size:19px;font-weight:800}
-  .result p{font-size:13px;color:var(--ink-2);line-height:1.62;margin-top:6px}
-  .result .pick{margin-top:14px;font-size:13px;font-weight:700;color:var(--green-dk);background:#f1faf4;
-    border:1px solid #c4e6d1;border-radius:11px;padding:10px 18px}
-  .result .actions{margin-top:26px;width:100%}
-  .btn-ghost{width:100%;border:1.5px solid var(--line);background:#fff;color:var(--ink-2);font-family:inherit;
-    font-size:13.5px;font-weight:600;border-radius:12px;padding:12px;cursor:pointer}
-  .btn-ghost:hover{background:#f6f3ec}
+  .vfoot .btn:disabled{background:#cdd5c8;cursor:not-allowed}
 
   .legend{width:236px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 6px 18px rgba(70,90,60,.08)}
   .legend h4{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--green-dk);margin-bottom:13px}
   .legend ol{list-style:none;display:flex;flex-direction:column;gap:6px}
-  .legend li{display:flex;gap:10px;font-size:12.5px;color:var(--ink-2);line-height:1.45;cursor:pointer;padding:8px 9px;border-radius:9px;transition:.13s}
+  .legend li{display:flex;gap:10px;font-size:12.5px;color:var(--ink-2);line-height:1.45;cursor:pointer;padding:8px 9px;border-radius:9px}
   .legend li:hover{background:#f3f9f5}
   .legend li.on{background:#f1faf4;color:var(--ink)}
-  .legend li .n{flex:0 0 auto;width:21px;height:21px;border-radius:6px;background:#eef4ef;color:var(--green-dk);
-    font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .legend li .n{flex:0 0 auto;width:21px;height:21px;border-radius:6px;background:#eef4ef;color:var(--green-dk);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
   .legend li.on .n{background:var(--green);color:#fff}
   .legend .div{height:1px;background:var(--line);margin:13px 0}
   .legend .meta{font-size:11px;color:#a39a8b;line-height:1.65}
@@ -209,260 +157,198 @@
 </style>
 </head>
 <body>
-
 <div class="doc-head">
-  <span class="doc-tag">성장판 2.0 · 협의용 프로토타입</span>
+  <span class="doc-tag">성장판 2.0 · 협의용 프로토타입 (화면설계서 싱크)</span>
   <h1>스타런 2기 아이돌 투표</h1>
-  <p>실제 마이클래스 화면 기준입니다. 좌측 햄버거(≡)로 슬라이드 메뉴를 열어 투표에 진입합니다. 캐릭터·태블릿·후보 이미지는 실제 에셋으로 교체 예정인 자리표시입니다.</p>
+  <p>화면설계서(01~05)와 동기화된 버전입니다. 메인 팝업(포스터형·유도 문구)과 목록 배너로 진입 → 투표(2열 카드) → 완료 팝업. 기간 종료 시 팝업·배너는 노출되지 않습니다.</p>
   <div class="scenario" id="scenario">
-    <button data-s="normal" class="active"><span class="dot"></span>정상 투표</button>
+    <button data-s="normal" class="active"><span class="dot"></span>정상 (미투표)</button>
     <button data-s="voted"><span class="dot"></span>이미 투표한 회원</button>
     <button data-s="closed"><span class="dot"></span>투표 기간 종료</button>
-    <span class="hint">← 시나리오를 전환해 각 분기 화면을 확인하세요</span>
+    <span class="hint">← 시나리오 전환</span>
   </div>
 </div>
 
 <div class="stage">
   <div class="phone">
-
-    <!-- 마이클래스 -->
     <section class="screen show" id="sc-class">
       <div class="app">
         <div class="side">
           <div class="ham" onclick="openDrawer()">&#9776;</div>
-          <div class="nav on">&#8962;</div>
-          <div class="nav">&#9998;</div>
-          <div class="nav">&#9734;</div>
-          <div class="nav">&#9788;</div>
+          <div class="nav on">&#8962;</div><div class="nav">&#9998;</div><div class="nav">&#9734;</div><div class="nav">&#9788;</div>
         </div>
         <div class="content">
-          <div class="topbar">
-            <div class="mc">마이클래스</div>
-            <div class="who">김대교최대아홉글자…</div>
-            <div class="out">&#10150;</div>
+          <div class="topbar"><div class="mc">마이클래스</div><div class="who">김대교최대아홉글자…</div></div>
+          <div class="hero"><h2>너에게 맞는 성장 디딤판<small>눈높이가 준비할게</small></h2>
+            <div class="sprout"><div class="b b1"></div><div class="b b2"></div></div></div>
+          <!-- 목록 배너 (진입점) -->
+          <div class="vbanner" id="banner" onclick="enterVote()">
+            <div class="tag">대교 써밋 스타런 2기</div>
+            <h4>함께 달릴 아이돌에 투표하세요!</h4>
+            <p>학습 회원이라면 누구나 · 1인 1회</p>
+            <p style="font-weight:700;margin-top:2px">투표 기간 7/20 ~ 8/14</p>
+            <span class="go">투표하러 가기 &#8250;</span><span class="mic">&#127908;</span>
           </div>
-          <div class="hero">
-            <h2>너에게 맞는 성장 디딤판<small>눈높이가 준비할께</small></h2>
-            <div class="sprout">
-              <span class="spk" style="top:8px;left:0">&#10022;</span>
-              <span class="spk" style="top:2px;right:8px">&#10022;</span>
-              <span class="spk" style="top:34px;right:0">&#10022;</span>
-              <div class="leaf" style="left:24px"></div>
-              <div class="leaf" style="left:70px;transform:scaleX(-1)"></div>
-              <div class="b b1"><span class="face">^&nbsp;^</span></div>
-              <div class="b b2"><span class="face" style="font-size:11px">• •</span></div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="ct"><h3>눈높이수학</h3><span class="chip-xp">체험</span><span class="find">진도 찾기 &#128269;</span></div>
-            <div class="enc"><span class="e">&#128518;</span>멋져요! 벌써 1개의 레슨을 완료했어요. 남은 학습도 화이팅!</div>
-            <div class="sets">
-              <div class="set">A 1세트 <span class="ok">&#10003;</span></div>
-              <div class="set now">A 2세트 <span class="mini">학습중</span></div>
-              <div class="set go">A 3세트 <span class="arr">&#8250;</span></div>
-            </div>
-          </div>
-
-          <div class="banner">
-            <span class="x">&#10005;</span>
-            <h4>써밋 학습 태블릿 무이자 할부 이벤트</h4>
-            <p>텍스트텍스트텍스트텍스트</p>
-            <div class="tab">S6 Lite</div>
-          </div>
-
-          <div class="lcard">
-            <h3>써밋스텝영어</h3>
-            <div class="enc"><span class="e">&#128578;</span>이번 주도 열심히 공부해요.</div>
-            <div class="lmeta"><span><b>완료 학습</b>없어요.</span><span><b>현재 학습</b>주제별어휘 Unit4</span></div>
-            <button class="lbtn">이번 주 학습하기 <span class="arr">&#8250;</span></button>
-          </div>
-
-          <div class="lcard" style="margin-bottom:20px">
-            <h3>내신완공국어</h3>
-            <div class="enc"><span class="e">&#128578;</span>이번 주도 열심히 공부해요.</div>
-          </div>
+          <!-- 기간 종료 시 진입점 미노출 안내 -->
+          <div class="closed-note" id="closedNote">투표 기간이 종료되어 메인 팝업·목록 배너가 노출되지 않습니다. (노출 기간 설정으로 자동 처리 · 별도 종료 화면 없음)</div>
+          <div class="lcard"><h3>눈높이수학</h3><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div></div>
+          <div class="lcard" style="margin-bottom:20px"><h3>써밋스텝영어</h3><div class="ln" style="width:70%"></div></div>
         </div>
       </div>
 
-      <!-- 드로어 -->
       <div class="drawer" id="drawer">
         <div class="dim" onclick="closeDrawer()"></div>
         <div class="panel">
-          <div class="dr-head">
-            <span class="dr-close" onclick="closeDrawer()">&#10005;</span>
-            <div class="hi">안녕하세요</div>
-            <div class="nm">○○○ 학습회원님</div>
-            <div class="cls"><span>마이클래스</span><span>학습 현황 &#8250;</span></div>
-          </div>
+          <div class="dr-head"><span class="dr-close" onclick="closeDrawer()">&#10005;</span><div class="nm">○○○ 학습회원님</div></div>
           <div class="dr-menu">
             <div class="row"><span class="e">&#128218;</span>학습하기<span class="arr">&#8250;</span></div>
             <div class="row"><span class="e">&#128202;</span>학습 리포트<span class="arr">&#8250;</span></div>
-            <div class="row event" onclick="enterVote()">
-              <span class="e">&#127908;</span>스타런 2기 아이돌 투표
-              <span class="badge">진행중</span><span class="arr">&#8250;</span>
-            </div>
             <div class="row"><span class="e">&#127873;</span>이벤트<span class="arr">&#8250;</span></div>
             <div class="row"><span class="e">&#9881;</span>설정<span class="arr">&#8250;</span></div>
           </div>
         </div>
       </div>
 
-      <!-- 투표 -->
+      <!-- 01. 메인 팝업 (포스터형, 유도문구, 버튼 없음) -->
+      <div class="modal" id="popMain">
+        <div class="dim" onclick="closePop('popMain')"></div>
+        <div class="pop poster" onclick="fromPop()">
+          <span class="pop-x" onclick="event.stopPropagation();closePop('popMain')">&#10005;</span>
+          <div class="vis"><div class="k">대교 써밋 스타런 2기</div><div class="t">함께 달릴 아이돌은?</div><div class="ph-note">(키비주얼 — 마케팅팀 제공 / 정사각 비주얼)</div></div>
+          <div class="lead">
+            <div class="c1">스타런 2기와 어울리는 아이돌에<br>여러분의 한 표를 들려주세요! (1인 1회)</div>
+            <div class="c2" style="font-weight:700;color:#2b8a4c;margin-top:9px">투표 기간 7/20 ~ 8/14</div>
+            <div class="c2">아래 배너 또는 본 팝업을 눌러 참여할 수 있어요.</div>
+            <div class="tap">눌러서 투표하러 가기 ›</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05. 이미 투표 팝업 -->
+      <div class="modal" id="popVoted">
+        <div class="dim" onclick="closePop('popVoted')"></div>
+        <div class="pop"><div class="pop-body"><div class="emo warn">&#128499;</div>
+          <h3>이미 투표하셨습니다</h3><p>이번 이벤트는 1인 1회만<br>참여할 수 있어요. 감사합니다!</p>
+          <div class="pop-btns"><button class="btn" onclick="closePop('popVoted')">확인</button></div></div></div>
+      </div>
+
+      <!-- 04. 완료 팝업 -->
+      <div class="modal" id="popDone">
+        <div class="dim"></div>
+        <div class="pop"><div class="pop-body"><div class="emo ok">&#127881;</div>
+          <h3>투표가 완료됐어요</h3><p>소중한 한 표 감사합니다.<br>결과는 이벤트 종료 후 안내될 예정입니다.</p>
+          <div class="pick" id="donePick">선택: —</div>
+          <div class="pop-btns"><button class="btn" onclick="afterDone()">확인</button></div></div></div>
+      </div>
+
+      <!-- 03. 투표 (2열 카드) -->
       <div class="vscreen" id="sc-vote">
         <div class="appbar"><span class="ic" onclick="backToClass()">&#8249;</span><span class="title">스타런 2기 투표</span></div>
         <div class="vbody">
-          <div class="vhero">
-            <div class="kij">대교 써밋 스타런 2기</div>
-            <h2>함께 달릴<br>아이돌은?</h2>
-            <p>스타런 2기와 어울리는 아이돌이 누구일지<br>여러분의 생각을 들려주세요!</p>
-            <span class="single">단일 선택 · 1인 1회</span>
-          </div>
+          <div class="vhero"><div class="kij">대교 써밋 스타런 2기</div><h2>함께 달릴 아이돌은?</h2>
+            <p>스타런 2기와 어울리는 아이돌이 누구일지 의견을 들려주세요!</p><span class="single">단일 선택 · 1인 1회</span><div style="font-size:11px;font-weight:700;color:#2c63ab;margin-top:9px">투표 기간 7/20 ~ 8/14</div></div>
           <div class="cands" id="cands"></div>
-          <div class="etc-input" id="etcWrap">
-            <input id="etcText" type="text" placeholder="기타 아이돌명을 입력해 주세요" maxlength="20" oninput="checkBtn()">
-            <div class="note">최대 20자 · 금칙어 필터 적용 (정책 확정 필요)</div>
-          </div>
+          <div class="etc-input" id="etcWrap"><input id="etcText" type="text" placeholder="기타 아이돌명을 입력해 주세요" maxlength="20" oninput="checkBtn()">
+            <div class="note">최대 20자 · '기타' 입력값 통계 처리는 마케팅팀 소관</div></div>
         </div>
-        <div class="vfoot">
-          <div class="priv">본 투표는 개인정보를 수집하지 않는 익명 투표입니다.</div>
-          <button class="btn" id="voteBtn" disabled onclick="submitVote()">투표하기</button>
-        </div>
+        <div class="vfoot"><div class="priv">본 투표는 개인정보를 수집하지 않는 익명 투표입니다.</div>
+          <button class="btn" id="voteBtn" disabled onclick="submitVote()">투표하기</button></div>
       </div>
-
-      <!-- 완료 -->
-      <div class="vscreen" id="sc-done">
-        <div class="appbar"><span class="title" style="margin-left:4px">투표 완료</span></div>
-        <div class="result ok">
-          <div class="emo">&#127881;</div>
-          <h3>투표가 완료됐어요</h3>
-          <p>소중한 한 표 감사합니다.<br>결과는 이벤트 종료 후 안내될 예정입니다.</p>
-          <div class="pick" id="donePick">선택: —</div>
-          <div class="actions"><button class="btn-ghost" onclick="backToClass()">마이클래스로 돌아가기</button></div>
-        </div>
-      </div>
-
-      <!-- 이미 투표 -->
-      <div class="vscreen" id="sc-already">
-        <div class="appbar"><span class="ic" onclick="backToClass()">&#8249;</span><span class="title">스타런 2기 투표</span></div>
-        <div class="result warn">
-          <div class="emo">&#128499;</div>
-          <h3>이미 투표하셨습니다</h3>
-          <p>이번 이벤트는 1인 1회만 참여할 수 있어요.<br>참여해 주셔서 감사합니다.</p>
-          <div class="actions"><button class="btn-ghost" onclick="backToClass()">마이클래스로 돌아가기</button></div>
-        </div>
-      </div>
-
-      <!-- 종료 -->
-      <div class="vscreen" id="sc-closed">
-        <div class="appbar"><span class="ic" onclick="backToClass()">&#8249;</span><span class="title">스타런 2기 투표</span></div>
-        <div class="result stop">
-          <div class="emo">&#9200;</div>
-          <h3>투표가 종료됐어요</h3>
-          <p>참여 기간이 마감되었습니다.<br>많은 참여 감사합니다.</p>
-          <div class="actions"><button class="btn-ghost" onclick="backToClass()">마이클래스로 돌아가기</button></div>
-        </div>
-      </div>
-
     </section>
   </div>
 
   <aside class="legend">
-    <h4>화면 흐름</h4>
+    <h4>화면 흐름 (설계서 싱크)</h4>
     <ol id="steps">
-      <li data-go="class"><span class="n">1</span>마이클래스 (햄버거 → 메뉴)</li>
-      <li data-go="vote"><span class="n">2</span>후보 단일 선택</li>
-      <li data-go="done"><span class="n">3</span>투표 완료</li>
-      <li data-go="already"><span class="n">!</span>이미 투표한 회원 분기</li>
-      <li data-go="closed"><span class="n">&#9200;</span>기간 종료 분기</li>
+      <li data-go="class"><span class="n">1</span>진입 — 메인 팝업</li>
+      <li data-go="class2"><span class="n">2</span>진입 — 목록 배너</li>
+      <li data-go="vote"><span class="n">3</span>투표 (2열 카드)</li>
+      <li data-go="done"><span class="n">4</span>투표 완료 (팝업)</li>
+      <li data-go="voted"><span class="n">5</span>이미 투표 (팝업)</li>
     </ol>
     <div class="div"></div>
     <div class="meta">
-      <b>저장 구조</b><br>
-      회원번호 SHA-256 해시 → 중복 차단<br>
-      통계: 학년·성별·지역·학습서비스 + 결과<br>
-      <b>원본 회원ID 미저장</b>
+      <b>연동 (6/18 회의·DLD)</b><br>
+      단일 API GET · 토큰으로 투표 여부 판별<br>
+      BE→APP: S3 이미지·이름·순서·문구<br>
+      APP→BE: 선택 순서만<br>
+      추출: 학년·성별·본부·결과·일시<br>
+      기간 종료 시 진입점 자동 미노출
     </div>
   </aside>
 </div>
 
 <script>
   const CANDS=[
-    {id:'kortis',nm:'코르티스',sub:'CORTIS'},
-    {id:'h2h',nm:'하츠투하츠',sub:'Hearts2Hearts'},
-    {id:'bnd',nm:'보이넥스트도어',sub:'BOYNEXTDOOR'},
-    {id:'illit',nm:'아일릿',sub:'ILLIT'},
-    {id:'nctw',nm:'NCT WISH',sub:'NCT WISH'},
-    {id:'etc',nm:'기타',sub:'직접 입력'}
+    {id:'kortis',nm:'코르티스',sub:'CORTIS'},{id:'h2h',nm:'하츠투하츠',sub:'Hearts2Hearts'},
+    {id:'bnd',nm:'보이넥스트도어',sub:'BOYNEXTDOOR'},{id:'illit',nm:'아일릿',sub:'ILLIT'},
+    {id:'nctw',nm:'NCT WISH',sub:'NCT WISH'},{id:'etc',nm:'기타',sub:'직접 입력'}
   ];
   let scenario='normal',selected=null;
-
   const candWrap=document.getElementById('cands');
   CANDS.forEach(c=>{
-    const el=document.createElement('div');
-    el.className='cand'+(c.id==='etc'?' etc':'');el.dataset.id=c.id;
-    if(c.id==='etc'){
-      el.innerHTML=`<div class="info"><div class="ic-plus">＋</div>
-        <div><div class="nm">기타</div><div class="sub">직접 입력</div></div><div class="rb"></div></div>`;
-    }else{
-      el.innerHTML=`<div class="photo">
-          <img src="img/${c.id}.jpg" alt="${c.nm}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-          <div class="ph-fallback" style="display:none">${c.nm}<small>마케팅팀 제공 사진 영역 (img/${c.id}.jpg)</small></div>
-        </div>
-        <div class="info"><div><div class="nm">${c.nm}</div><div class="sub">${c.sub}</div></div><div class="rb"></div></div>`;
-    }
-    el.onclick=()=>selectCand(c.id);
-    candWrap.appendChild(el);
+    const el=document.createElement('div'); el.className='cand'+(c.id==='etc'?' etc':''); el.dataset.id=c.id;
+    if(c.id==='etc'){ el.innerHTML=`<div class="nm">기타</div><div class="sub">직접 입력</div>`; }
+    else{ el.innerHTML=`<div class="nm">${c.nm}</div><div class="sub">${c.sub}</div>
+      <div class="photo"><img src="img/${c.id}.jpg" alt="${c.nm}" style="width:100%;height:100%;object-fit:cover;border-radius:9px" onerror="this.style.display='none';this.parentNode.appendChild(document.createTextNode('사진 (마케팅팀 제공)'))"></div>`; }
+    el.onclick=()=>selectCand(c.id); candWrap.appendChild(el);
   });
-  function selectCand(id){
-    selected=id;
+  function selectCand(id){ selected=id;
     document.querySelectorAll('.cand').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));
     document.getElementById('etcWrap').classList.toggle('open',id==='etc');
-    if(id!=='etc')document.getElementById('etcText').value='';
-    checkBtn();
-  }
-  function checkBtn(){
-    let ok=!!selected;
-    if(selected==='etc')ok=document.getElementById('etcText').value.trim().length>0;
-    document.getElementById('voteBtn').disabled=!ok;
-  }
-
+    if(id!=='etc')document.getElementById('etcText').value=''; checkBtn(); }
+  function checkBtn(){ let ok=!!selected; if(selected==='etc')ok=document.getElementById('etcText').value.trim().length>0;
+    document.getElementById('voteBtn').disabled=!ok; }
   function openDrawer(){document.getElementById('drawer').classList.add('show');}
   function closeDrawer(){document.getElementById('drawer').classList.remove('show');}
-
-  function hideAllV(){document.querySelectorAll('.vscreen').forEach(s=>s.classList.remove('show'));}
-  function showV(id){hideAllV();document.getElementById('sc-'+id).classList.add('show');mark(id);}
-  function backToClass(){hideAllV();closeDrawer();mark('class');}
+  function openPop(id){document.getElementById(id).classList.add('show');}
+  function closePop(id){document.getElementById(id).classList.remove('show');}
+  function closeAllPop(){document.querySelectorAll('.modal').forEach(m=>m.classList.remove('show'));}
+  function hideV(){document.querySelectorAll('.vscreen').forEach(s=>s.classList.remove('show'));}
+  function showV(id){hideV();document.getElementById('sc-'+id).classList.add('show');mark('vote');}
   function mark(t){document.querySelectorAll('#steps li').forEach(li=>li.classList.toggle('on',li.dataset.go===t));}
 
+  function applyScenario(withPopup){
+    hideV();closeDrawer();closeAllPop();
+    const banner=document.getElementById('banner'), note=document.getElementById('closedNote');
+    if(scenario==='closed'){ banner.style.display='none'; note.classList.add('show'); }
+    else{ banner.style.display=''; note.classList.remove('show'); }
+    if(withPopup){
+      if(scenario==='voted'){ openPop('popVoted'); mark('voted'); }
+      else if(scenario==='closed'){ mark('class'); }
+      else { openPop('popMain'); mark('class'); }
+    }
+  }
+  function backToClass(){ applyScenario(false); mark('class'); }
   function enterVote(){
-    closeDrawer();
-    if(scenario==='voted')showV('already');
-    else if(scenario==='closed')showV('closed');
+    if(scenario==='voted'){ openPop('popVoted'); mark('voted'); }
+    else if(scenario==='closed'){ /* 진입점 없음 */ }
     else showV('vote');
   }
+  function fromPop(){ closePop('popMain'); showV('vote'); }
   function submitVote(){
-    const c=CANDS.find(x=>x.id===selected);let label=c?c.nm:'—';
-    if(selected==='etc'){const t=document.getElementById('etcText').value.trim();label='기타 · '+(t||'');}
-    document.getElementById('donePick').textContent='선택: '+label;
-    showV('done');
+    const c=CANDS.find(x=>x.id===selected); let label=c?c.nm:'—';
+    if(selected==='etc'){ const t=document.getElementById('etcText').value.trim(); label='기타 · '+(t||''); }
+    document.getElementById('donePick').textContent='선택: '+label; openPop('popDone'); mark('done');
   }
+  function afterDone(){ closePop('popDone'); hideV(); backToClass(); }
 
   document.querySelectorAll('#scenario button').forEach(b=>{
-    b.onclick=()=>{
-      scenario=b.dataset.s;
-      document.querySelectorAll('#scenario button').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-      selected=null;
-      document.querySelectorAll('.cand').forEach(c=>c.classList.remove('sel'));
-      document.getElementById('etcWrap').classList.remove('open');
-      document.getElementById('voteBtn').disabled=true;
-      backToClass();
-    };
+    b.onclick=()=>{ scenario=b.dataset.s;
+      document.querySelectorAll('#scenario button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+      selected=null; document.querySelectorAll('.cand').forEach(c=>c.classList.remove('sel'));
+      document.getElementById('etcWrap').classList.remove('open'); document.getElementById('voteBtn').disabled=true;
+      applyScenario(true); };
   });
   document.querySelectorAll('#steps li').forEach(li=>{
-    li.onclick=()=>{const t=li.dataset.go;if(t==='class')backToClass();else showV(t);};
+    li.onclick=()=>{ const t=li.dataset.go;
+      if(t==='class'){ applyScenario(false); openPop('popMain'); mark('class'); }
+      else if(t==='class2'){ applyScenario(false); mark('class2'); }
+      else if(t==='vote'){ showV('vote'); }
+      else if(t==='done'){ document.getElementById('donePick').textContent='선택: 코르티스'; openPop('popDone'); mark('done'); }
+      else if(t==='voted'){ applyScenario(false); openPop('popVoted'); mark('voted'); } };
   });
+  applyScenario(true);
 </script>
 </body>
 </html>

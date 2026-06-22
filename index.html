@@ -91,15 +91,16 @@
   .pop{position:relative;width:100%;max-width:320px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
   .pop-x{position:absolute;top:11px;right:13px;color:#fff;font-size:15px;cursor:pointer;z-index:2;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.28);display:flex;align-items:center;justify-content:center}
   /* 포스터형 메인 팝업 */
-  .pop.poster{max-width:330px;cursor:pointer}
-  .pop .vis{height:280px;background:linear-gradient(135deg,#dce8f6,#cfe0f5);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#2c63ab}
-  .pop .vis .k{font-size:11px;font-weight:700;letter-spacing:.05em}
-  .pop .vis .t{font-size:21px;font-weight:800;margin-top:6px;color:var(--ink)}
-  .pop .vis .ph-note{font-size:10.5px;color:#9aacc4;margin-top:14px}
-  .pop .lead{padding:20px 22px 10px;text-align:center}
-  .pop .lead .c1{font-size:15px;font-weight:800;color:var(--ink);line-height:1.5}
-  .pop .lead .c2{font-size:11.5px;color:var(--ink-2);margin-top:10px}
-  .pop .lead .tap{font-size:11px;color:var(--green-dk);font-weight:700;margin-top:14px;padding-bottom:6px}
+  .pop.poster{max-width:330px;cursor:pointer;background:#dce8f6}
+  .poster-body{padding:26px 24px 22px;text-align:center}
+  .poster-body .k{font-size:12px;font-weight:700;color:var(--green-dk);letter-spacing:.03em}
+  .poster-body .t{font-size:22px;font-weight:800;color:var(--ink);margin-top:7px}
+  .poster-body .sub{font-size:15px;font-weight:800;color:var(--ink);margin-top:20px}
+  .poster-body .period{font-size:11.5px;font-weight:700;color:var(--green-dk);margin-top:7px}
+  .poster-body .kv{margin-top:20px;height:150px;background:#d4d4d4;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+  .poster-body .kv .kv1{font-size:12px;color:#7a7a7a;font-weight:600}
+  .poster-body .kv .kv2{font-size:11px;color:#8a8a8a}
+  .poster-body .guide{font-size:11.5px;color:var(--ink-2);margin-top:16px}
   /* 안내 팝업 */
   .pop-body{padding:24px 22px 22px;text-align:center}
   .pop-body .emo{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px}
@@ -185,7 +186,7 @@
           <div class="vbanner" id="banner" onclick="enterVote()">
             <div class="tag">대교 써밋 스타런 2기</div>
             <h4>함께 달릴 아이돌에 투표하세요!</h4>
-            <p>학습 회원이라면 누구나 · 1인 1회</p>
+            <p>1인 1회</p>
             <p style="font-weight:700;margin-top:2px">투표 기간 7/20 ~ 8/14</p>
             <span class="go">투표하러 가기 &#8250;</span><span class="mic">&#127908;</span>
           </div>
@@ -214,12 +215,13 @@
         <div class="dim" onclick="closePop('popMain')"></div>
         <div class="pop poster" onclick="fromPop()">
           <span class="pop-x" onclick="event.stopPropagation();closePop('popMain')">&#10005;</span>
-          <div class="vis"><div class="k">대교 써밋 스타런 2기</div><div class="t">함께 달릴 아이돌은?</div><div class="ph-note">(키비주얼 — 마케팅팀 제공 / 정사각 비주얼)</div></div>
-          <div class="lead">
-            <div class="c1">스타런 2기와 어울리는 아이돌에<br>여러분의 한 표를 들려주세요! (1인 1회)</div>
-            <div class="c2" style="font-weight:700;color:#2b8a4c;margin-top:9px">투표 기간 7/20 ~ 8/14</div>
-            <div class="c2">아래 배너 또는 본 팝업을 눌러 참여할 수 있어요.</div>
-            <div class="tap">눌러서 투표하러 가기 ›</div>
+          <div class="poster-body">
+            <div class="k">대교 써밋 스타런 2기</div>
+            <div class="t">함께 달릴 아이돌은?</div>
+            <div class="sub">1인 1회 참여 가능</div>
+            <div class="period">투표 기간 7/20 ~ 8/14</div>
+            <div class="kv"><span class="kv1">(키비주얼)</span><span class="kv2">아이돌 다양하게 있는 이미지</span></div>
+            <div class="guide">팝업을 눌러 투표 참여</div>
           </div>
         </div>
       </div>
@@ -249,7 +251,7 @@
             <p>스타런 2기와 어울리는 아이돌이 누구일지 의견을 들려주세요!</p><span class="single">단일 선택 · 1인 1회</span><div style="font-size:11px;font-weight:700;color:#2c63ab;margin-top:9px">투표 기간 7/20 ~ 8/14</div></div>
           <div class="cands" id="cands"></div>
           <div class="etc-input" id="etcWrap"><input id="etcText" type="text" placeholder="기타 아이돌명을 입력해 주세요" maxlength="20" oninput="checkBtn()">
-            <div class="note">최대 20자 · '기타' 입력값 통계 처리는 마케팅팀 소관</div></div>
+            <div class="note">최대 20자 · '기타' 입력값(오타·중복 표기) 통계 처리는 마케팅팀 소관</div></div>
         </div>
         <div class="vfoot"><div class="priv">본 투표는 개인정보를 수집하지 않는 익명 투표입니다.</div>
           <button class="btn" id="voteBtn" disabled onclick="submitVote()">투표하기</button></div>

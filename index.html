@@ -57,14 +57,13 @@
   .sprout .b1{width:48px;height:48px;left:4px;background:#8fd6a0}
   .sprout .b2{width:40px;height:40px;left:46px;background:#3aa55c}
 
-  .vbanner{background:linear-gradient(135deg,#3aa55c,#2f9650);color:#fff;border-radius:18px;margin:12px 16px;
-    padding:18px;position:relative;cursor:pointer;overflow:hidden}
-  .vbanner .tag{font-size:10.5px;font-weight:700;opacity:.92}
-  .vbanner h4{font-size:16px;font-weight:800;margin-top:5px;max-width:220px;line-height:1.35}
-  .vbanner p{font-size:11.5px;opacity:.92;margin-top:7px}
-  .vbanner .go{display:inline-flex;align-items:center;gap:4px;margin-top:13px;background:#fff;color:var(--green-dk);
-    font-size:12px;font-weight:700;border-radius:999px;padding:7px 14px}
-  .vbanner .mic{position:absolute;right:16px;bottom:14px;font-size:38px;opacity:.32}
+  .banner-label{font-size:11px;font-weight:700;color:var(--warn);margin:12px 16px 0;padding-left:2px}
+  .vbanner{background:var(--sky);color:var(--ink);border:2px dashed var(--warn);border-radius:16px;margin:6px 16px 12px;padding:15px 17px;position:relative;cursor:pointer}
+  .vbanner .tag{font-size:11px;font-weight:700;color:var(--green-dk)}
+  .vbanner h4{font-size:15px;font-weight:800;color:var(--ink);margin-top:5px;line-height:1.35}
+  .vbanner h4 .small{font-size:11px;font-weight:600;color:var(--ink-2)}
+  .vbanner p{font-size:11px;font-weight:700;color:var(--ink-2);margin-top:6px}
+  .vbanner .go{display:inline-flex;align-items:center;gap:4px;margin-top:12px;background:#fff;color:var(--green-dk);font-size:12px;font-weight:700;border-radius:999px;padding:7px 14px}
   .closed-note{margin:12px 16px;padding:16px;border:1.5px dashed var(--stop);border-radius:14px;
     background:#fcf0f0;color:#a23b3b;font-size:12px;font-weight:600;line-height:1.5;display:none}
   .closed-note.show{display:block}
@@ -183,12 +182,12 @@
           <div class="hero"><h2>너에게 맞는 성장 디딤판<small>눈높이가 준비할게</small></h2>
             <div class="sprout"><div class="b b1"></div><div class="b b2"></div></div></div>
           <!-- 목록 배너 (진입점) -->
+          <div class="banner-label" id="bannerLabel">&#9660; 마이클래스 목록 최상단 · 상시 노출 배너</div>
           <div class="vbanner" id="banner" onclick="enterVote()">
             <div class="tag">대교 써밋 스타런 2기</div>
-            <h4>함께 달릴 아이돌에 투표하세요!</h4>
-            <p>1인 1회</p>
-            <p style="font-weight:700;margin-top:2px">투표 기간 7/20 ~ 8/14</p>
-            <span class="go">투표하러 가기 &#8250;</span><span class="mic">&#127908;</span>
+            <h4>함께 달릴 아이돌에 투표하세요! <span class="small">(1인 1회)</span></h4>
+            <p>기간 7/20~8/14</p>
+            <span class="go">투표하러 가기 &#8250;</span>
           </div>
           <!-- 기간 종료 시 진입점 미노출 안내 -->
           <div class="closed-note" id="closedNote">투표 기간이 종료되어 메인 팝업·목록 배너가 노출되지 않습니다. (노출 기간 설정으로 자동 처리 · 별도 종료 화면 없음)</div>
@@ -312,9 +311,9 @@
 
   function applyScenario(withPopup){
     hideV();closeDrawer();closeAllPop();
-    const banner=document.getElementById('banner'), note=document.getElementById('closedNote');
-    if(scenario==='closed'){ banner.style.display='none'; note.classList.add('show'); }
-    else{ banner.style.display=''; note.classList.remove('show'); }
+    const banner=document.getElementById('banner'), note=document.getElementById('closedNote'), label=document.getElementById('bannerLabel');
+    if(scenario==='closed'){ banner.style.display='none'; label.style.display='none'; note.classList.add('show'); }
+    else{ banner.style.display=''; label.style.display=''; note.classList.remove('show'); }
     if(withPopup){
       if(scenario==='voted'){ openPop('popVoted'); mark('voted'); }
       else if(scenario==='closed'){ mark('class'); }

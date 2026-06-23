@@ -124,15 +124,14 @@
   .vhero .single{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;color:#2c63ab;background:#fff;border:1px solid #cfe0f5;border-radius:999px;padding:4px 11px}
   /* 2열 카드 그리드 */
   .cands{padding:14px 16px 8px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .cand{background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer;transition:.13s;display:flex;flex-direction:column}
+  .cand{background:#fff;border:1.5px solid var(--line);border-radius:14px;cursor:pointer;transition:.13s;position:relative;padding:18px 40px 18px 16px;min-height:78px;display:flex;flex-direction:column;justify-content:center}
   .cand:hover{border-color:#bfe0cb}
   .cand.sel{border-color:var(--green);box-shadow:0 2px 10px rgba(52,163,91,.16)}
-  .cand .nm{font-size:13.5px;font-weight:700;padding:9px 11px 1px}
-  .cand .sub{font-size:10px;color:var(--ink-2);padding:0 11px 7px}
-  .cand .photo{margin:0 11px 11px;height:84px;border-radius:9px;background:linear-gradient(135deg,#e3ddd2,#f1ece2);position:relative;display:flex;align-items:center;justify-content:center;font-size:10px;color:#9a9285;font-weight:600}
-  .cand.sel .photo::after{content:"✓";position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px}
-  .cand.etc .photo{display:none}
-  .cand.etc{padding-bottom:11px}
+  .cand .nm{font-size:14.5px;font-weight:700}
+  .cand .sub{font-size:10.5px;color:var(--ink-2);margin-top:3px}
+  .cand .radio{position:absolute;top:50%;right:14px;transform:translateY(-50%);width:20px;height:20px;border:2px solid #cdd5c8;border-radius:50%}
+  .cand.sel .radio{border-color:var(--green);background:var(--green)}
+  .cand.sel .radio::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:7px;height:7px;border-radius:50%;background:#fff}
   .etc-input{padding:0 16px;max-height:0;overflow:hidden;transition:max-height .22s ease}
   .etc-input.open{max-height:90px}
   .etc-input input{width:100%;margin-top:2px;padding:11px 13px;border:1.5px solid var(--line);border-radius:11px;font-size:13px;font-family:inherit}
@@ -186,7 +185,7 @@
           <div class="vbanner" id="banner" onclick="enterVote()">
             <div class="tag">대교 써밋 스타런 2기</div>
             <h4>함께 달릴 아이돌에 투표하세요! <span class="small">(1인 1회)</span></h4>
-            <p>기간 7/20~8/14</p>
+            <p>기간 7/16~7/24</p>
             <span class="go">투표하러 가기 &#8250;</span>
           </div>
           <!-- 기간 종료 시 진입점 미노출 안내 -->
@@ -218,7 +217,7 @@
             <div class="k">대교 써밋 스타런 2기</div>
             <div class="t">함께 달릴 아이돌은?</div>
             <div class="sub">1인 1회 참여 가능</div>
-            <div class="period">투표 기간 7/20 ~ 8/14</div>
+            <div class="period">투표 기간 7/16 ~ 7/24</div>
             <div class="kv"><span class="kv1">(키비주얼)</span><span class="kv2">아이돌 다양하게 있는 이미지</span></div>
             <div class="guide">팝업을 눌러 투표 참여</div>
           </div>
@@ -230,7 +229,7 @@
         <div class="dim" onclick="closePop('popVoted')"></div>
         <div class="pop"><div class="pop-body"><div class="emo warn">&#128499;</div>
           <h3>이미 투표하셨습니다</h3><p>이번 이벤트는 1인 1회만<br>참여할 수 있어요. 감사합니다!</p>
-          <div class="pop-btns"><button class="btn" onclick="closePop('popVoted')">확인</button></div></div></div>
+          <div class="pop-btns"><button class="btn" onclick="afterVoted()">확인</button></div></div></div>
       </div>
 
       <!-- 04. 완료 팝업 -->
@@ -247,7 +246,7 @@
         <div class="appbar"><span class="ic" onclick="backToClass()">&#8249;</span><span class="title">스타런 2기 투표</span></div>
         <div class="vbody">
           <div class="vhero"><div class="kij">대교 써밋 스타런 2기</div><h2>함께 달릴 아이돌은?</h2>
-            <p>스타런 2기와 어울리는 아이돌이 누구일지 의견을 들려주세요!</p><span class="single">단일 선택 · 1인 1회</span><div style="font-size:11px;font-weight:700;color:#2c63ab;margin-top:9px">투표 기간 7/20 ~ 8/14</div></div>
+            <p>스타런 2기와 어울리는 아이돌이 누구일지 의견을 들려주세요!</p><span class="single">단일 선택 · 1인 1회</span><div style="font-size:11px;font-weight:700;color:#2c63ab;margin-top:9px">투표 기간 7/16 ~ 7/24</div></div>
           <div class="cands" id="cands"></div>
           <div class="etc-input" id="etcWrap"><input id="etcText" type="text" placeholder="기타 아이돌명을 입력해 주세요" maxlength="20" oninput="checkBtn()">
             <div class="note">최대 20자 · '기타' 입력값(오타·중복 표기) 통계 처리는 마케팅팀 소관</div></div>
@@ -289,9 +288,7 @@
   const candWrap=document.getElementById('cands');
   CANDS.forEach(c=>{
     const el=document.createElement('div'); el.className='cand'+(c.id==='etc'?' etc':''); el.dataset.id=c.id;
-    if(c.id==='etc'){ el.innerHTML=`<div class="nm">기타</div><div class="sub">직접 입력</div>`; }
-    else{ el.innerHTML=`<div class="nm">${c.nm}</div><div class="sub">${c.sub}</div>
-      <div class="photo"><img src="img/${c.id}.jpg" alt="${c.nm}" style="width:100%;height:100%;object-fit:cover;border-radius:9px" onerror="this.style.display='none';this.parentNode.appendChild(document.createTextNode('사진 (마케팅팀 제공)'))"></div>`; }
+    el.innerHTML=`<div class="nm">${c.nm}</div><div class="sub">${c.sub}</div><span class="radio"></span>`;
     el.onclick=()=>selectCand(c.id); candWrap.appendChild(el);
   });
   function selectCand(id){ selected=id;
@@ -315,14 +312,14 @@
     if(scenario==='closed'){ banner.style.display='none'; label.style.display='none'; note.classList.add('show'); }
     else{ banner.style.display=''; label.style.display=''; note.classList.remove('show'); }
     if(withPopup){
-      if(scenario==='voted'){ openPop('popVoted'); mark('voted'); }
+      if(scenario==='voted'){ showV('vote'); openPop('popVoted'); mark('voted'); }
       else if(scenario==='closed'){ mark('class'); }
       else { openPop('popMain'); mark('class'); }
     }
   }
   function backToClass(){ applyScenario(false); mark('class'); }
   function enterVote(){
-    if(scenario==='voted'){ openPop('popVoted'); mark('voted'); }
+    if(scenario==='voted'){ showV('vote'); openPop('popVoted'); mark('voted'); }
     else if(scenario==='closed'){ /* 진입점 없음 */ }
     else showV('vote');
   }
@@ -333,6 +330,7 @@
     document.getElementById('donePick').textContent='선택: '+label; openPop('popDone'); mark('done');
   }
   function afterDone(){ closePop('popDone'); hideV(); backToClass(); }
+  function afterVoted(){ closePop('popVoted'); hideV(); backToClass(); }
 
   document.querySelectorAll('#scenario button').forEach(b=>{
     b.onclick=()=>{ scenario=b.dataset.s;

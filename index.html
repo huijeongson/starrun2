@@ -85,6 +85,8 @@
   .dr-menu .row .arr{margin-left:auto;color:#cdd5cd;font-size:16px}
 
   .modal{position:absolute;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:22px}
+  .toast{position:absolute;left:50%;bottom:36px;transform:translateX(-50%) translateY(16px);background:rgba(40,46,54,.95);color:#fff;font-size:12.5px;font-weight:600;padding:12px 22px;border-radius:999px;opacity:0;transition:opacity .28s,transform .28s;z-index:80;white-space:nowrap;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
   .modal.show{display:flex}
   .modal .dim{position:absolute;inset:0;background:rgba(20,30,20,.5)}
   .pop{position:relative;width:100%;max-width:320px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
@@ -105,6 +107,7 @@
   .pop-body .emo{width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 10px}
   .pop-body .emo.ok{background:#e2f5ea}.pop-body .emo.warn{background:#fdf0e0}
   .pop-body h3{font-size:18px;font-weight:800}
+  .pop-body .cheer{font-size:13.5px;font-weight:700;color:var(--green-dk);margin-top:8px}
   .pop-body p{font-size:12.5px;color:var(--ink-2);line-height:1.6;margin-top:8px}
   .pop-body .pick{margin-top:13px;font-size:12.5px;font-weight:700;color:var(--green-dk);background:#f1faf4;border:1px solid #c4e6d1;border-radius:10px;padding:8px 14px;display:inline-block}
   .pop-btns{margin-top:18px}
@@ -224,20 +227,17 @@
         </div>
       </div>
 
-      <!-- 05. 이미 투표 팝업 -->
-      <div class="modal" id="popVoted">
-        <div class="dim" onclick="closePop('popVoted')"></div>
-        <div class="pop"><div class="pop-body"><div class="emo warn">&#128499;</div>
-          <h3>이미 투표하셨습니다</h3><p>이번 이벤트는 1인 1회만<br>참여할 수 있어요. 감사합니다!</p>
-          <div class="pop-btns"><button class="btn" onclick="afterVoted()">확인</button></div></div></div>
-      </div>
+      <!-- 05. 이미 투표 — 토스트 메시지 -->
+      <div class="toast" id="toast">이미 투표했어요</div>
 
       <!-- 04. 완료 팝업 -->
       <div class="modal" id="popDone">
         <div class="dim"></div>
-        <div class="pop"><div class="pop-body"><div class="emo ok">&#127881;</div>
-          <h3>투표가 완료됐어요</h3><p>소중한 한 표 감사합니다.<br>결과는 이벤트 종료 후 안내될 예정입니다.</p>
-          <div class="pick" id="donePick">선택: —</div>
+        <div class="pop"><span class="pop-x" onclick="afterDone()">&#10005;</span>
+          <div class="pop-body"><div class="emo ok">&#127881;</div>
+          <h3>투표가 완료됐어요</h3>
+          <div class="cheer" id="donePick">○○에게 응원을 보냈어요.</div>
+          <p>소중한 한 표 감사합니다.<br>결과는 이벤트 종료 후 안내될 예정입니다.</p>
           <div class="pop-btns"><button class="btn" onclick="afterDone()">확인</button></div></div></div>
       </div>
 
@@ -252,7 +252,7 @@
             <div class="note">최대 20자 · '기타' 입력값(오타·중복 표기) 통계 처리는 마케팅팀 소관</div></div>
         </div>
         <div class="vfoot"><div class="priv">본 투표는 개인정보를 수집하지 않는 익명 투표입니다.</div>
-          <button class="btn" id="voteBtn" disabled onclick="submitVote()">투표하기</button></div>
+          <button class="btn" id="voteBtn" disabled onclick="submitVote()">원하는 아이돌을 선택해 주세요.</button></div>
       </div>
     </section>
   </div>
@@ -264,7 +264,7 @@
       <li data-go="class2"><span class="n">2</span>진입 — 목록 배너</li>
       <li data-go="vote"><span class="n">3</span>투표 (2열 카드)</li>
       <li data-go="done"><span class="n">4</span>투표 완료 (팝업)</li>
-      <li data-go="voted"><span class="n">5</span>이미 투표 (팝업)</li>
+      <li data-go="voted"><span class="n">5</span>이미 투표 (토스트)</li>
     </ol>
     <div class="div"></div>
     <div class="meta">
@@ -296,7 +296,7 @@
     document.getElementById('etcWrap').classList.toggle('open',id==='etc');
     if(id!=='etc')document.getElementById('etcText').value=''; checkBtn(); }
   function checkBtn(){ let ok=!!selected; if(selected==='etc')ok=document.getElementById('etcText').value.trim().length>0;
-    document.getElementById('voteBtn').disabled=!ok; }
+    const b=document.getElementById('voteBtn'); b.disabled=!ok; b.textContent=ok?'투표하기':'원하는 아이돌을 선택해 주세요.'; }
   function openDrawer(){document.getElementById('drawer').classList.add('show');}
   function closeDrawer(){document.getElementById('drawer').classList.remove('show');}
   function openPop(id){document.getElementById(id).classList.add('show');}
@@ -312,14 +312,14 @@
     if(scenario==='closed'){ banner.style.display='none'; label.style.display='none'; note.classList.add('show'); }
     else{ banner.style.display=''; label.style.display=''; note.classList.remove('show'); }
     if(withPopup){
-      if(scenario==='voted'){ showV('vote'); openPop('popVoted'); mark('voted'); }
+      if(scenario==='voted'){ showToast(); mark('class'); }
       else if(scenario==='closed'){ mark('class'); }
       else { openPop('popMain'); mark('class'); }
     }
   }
   function backToClass(){ applyScenario(false); mark('class'); }
   function enterVote(){
-    if(scenario==='voted'){ showV('vote'); openPop('popVoted'); mark('voted'); }
+    if(scenario==='voted'){ showToast(); }
     else if(scenario==='closed'){ /* 진입점 없음 */ }
     else showV('vote');
   }
@@ -327,10 +327,10 @@
   function submitVote(){
     const c=CANDS.find(x=>x.id===selected); let label=c?c.nm:'—';
     if(selected==='etc'){ const t=document.getElementById('etcText').value.trim(); label='기타 · '+(t||''); }
-    document.getElementById('donePick').textContent='선택: '+label; openPop('popDone'); mark('done');
+    document.getElementById('donePick').textContent=label+'에게 응원을 보냈어요.'; openPop('popDone'); mark('done');
   }
   function afterDone(){ closePop('popDone'); hideV(); backToClass(); }
-  function afterVoted(){ closePop('popVoted'); hideV(); backToClass(); }
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg||'이미 투표했어요'; t.classList.add('show'); clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),2600); }
 
   document.querySelectorAll('#scenario button').forEach(b=>{
     b.onclick=()=>{ scenario=b.dataset.s;
@@ -344,8 +344,8 @@
       if(t==='class'){ applyScenario(false); openPop('popMain'); mark('class'); }
       else if(t==='class2'){ applyScenario(false); mark('class2'); }
       else if(t==='vote'){ showV('vote'); }
-      else if(t==='done'){ document.getElementById('donePick').textContent='선택: 코르티스'; openPop('popDone'); mark('done'); }
-      else if(t==='voted'){ applyScenario(false); openPop('popVoted'); mark('voted'); } };
+      else if(t==='done'){ document.getElementById('donePick').textContent='코르티스에게 응원을 보냈어요.'; openPop('popDone'); mark('done'); }
+      else if(t==='voted'){ applyScenario(false); showToast(); mark('class'); } };
   });
   applyScenario(true);
 </script>
